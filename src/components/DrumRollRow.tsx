@@ -1,10 +1,6 @@
 import React from "react"
 import DrumRollElem, {DrumRollElemState} from "./DrumRollElem"
-import _ from "lodash"
-
-interface Props extends DrumRollRowState {
-  backprop: (d: any) => void
-}
+import {ChildComponent} from "./ExtendedComponent"
 
 export interface DrumRollRowState {
   id: number,
@@ -13,7 +9,11 @@ export interface DrumRollRowState {
   elems: Array<DrumRollElemState>
 }
 
-class DrumRollRow extends React.Component<Props> {
+interface Props extends DrumRollRowState {
+  backprop: (d: any) => void
+}
+
+class DrumRollRow extends ChildComponent<Props> {
   state = {
     nameEditing: false,
   }
@@ -31,15 +31,7 @@ class DrumRollRow extends React.Component<Props> {
             margin: "5px"
           }}
         >
-          <DrumRollElem backprop={
-            (d: any) => {
-              this.props.backprop({elems: this.props.elems.map((f, jnd) => {
-                return ind === jnd
-                  ? {...f, ...d}
-                  : f
-              })})
-            }
-          } on={e.on} velocity={0}/>
+          <DrumRollElem backprop={this.makeBackprop("elems", ind)} on={e.on} velocity={0}/>
         </div>
       );
     })
@@ -54,9 +46,12 @@ class DrumRollRow extends React.Component<Props> {
             this.state.nameEditing
               ? (
                 <div>
-                  <input value={this.props.name} onChange={(e) => {
-                    this.props.backprop({ name: e.target.name })
-                  }}></input>
+                  <input
+                    value={this.props.name} 
+                    onChange={(e) => {
+                      this.props.backprop({ name: e.target.value })
+                    }}
+                  ></input>
                   <button onClick={this.handlerEditButtonClick}>
                     Edit Name
                   </button>

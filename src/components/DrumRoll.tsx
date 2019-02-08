@@ -1,13 +1,12 @@
 import React, { ButtonHTMLAttributes } from "react"
 import DrumRollRow, {DrumRollRowState} from "./DrumRollRow"
-
+import {RootComponent} from "./ExtendedComponent"
 
 interface DrumRollState {
   rows: Array<DrumRollRowState>
 }
 
-
-class DrumRoll extends React.Component {
+class DrumRoll extends RootComponent {
   id = 0
 
   state = {
@@ -35,22 +34,11 @@ class DrumRoll extends React.Component {
   }
 
   render() {
-    // return (
-    //   <DrumRollRow id={0} name="New Drum Roll Row" setName={() => {}}></DrumRollRow>
-    // )
     const rows = this.state.rows.map((row, ind) => {
       return (
         <div>
           <button value={row.id} onClick={this.handlerDeleteButtonClick}>Delete</button>
-          <DrumRollRow {...row} backprop={
-            (d) => {
-              this.setState({rows: this.state.rows.map((sow, jnd) => {
-                return ind === jnd
-                  ? {...sow, ...d}
-                  : sow
-              })})
-            }
-          }/>
+          <DrumRollRow {...row} backprop={this.makeBackprop("rows", ind)}/>
         </div>
       )
     })

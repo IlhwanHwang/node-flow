@@ -1,4 +1,5 @@
 import React from "react"
+import {ChildComponent} from "./ExtendedComponent"
 
 
 export interface DrumRollElemState {
@@ -6,13 +7,11 @@ export interface DrumRollElemState {
   velocity: number
 }
 
-
 interface Props extends DrumRollElemState {
   backprop: (d: any) => void
 }
 
-
-class DrumRollElem extends React.Component<Props> {
+class DrumRollElem extends ChildComponent<Props> {
 
   handlerOnClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     this.props.backprop({ on: !this.props.on })
