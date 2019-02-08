@@ -1,20 +1,20 @@
 import React, { ButtonHTMLAttributes } from "react"
 import DrumRollRow, {DrumRollRowState} from "./DrumRollRow"
-import {RootComponent} from "./ExtendedComponent"
+import {ChildComponent} from "./ExtendedComponent"
 
-interface DrumRollState {
+export interface DrumRollState {
   rows: Array<DrumRollRowState>
 }
 
-class DrumRoll extends RootComponent {
+interface Props extends DrumRollState {
+  backprop: (d: any) => void
+}
+
+class DrumRoll extends ChildComponent<Props> {
   id = 0
 
-  state = {
-    rows: Array<DrumRollRowState>()
-  }
-
   handlerAddButtonClick = (e: React.MouseEvent) => {
-    this.setState({ rows: this.state.rows.concat({
+    this.props.backprop({ rows: this.props.rows.concat({
       id: this.id++,
       name: "New Drum Roll",
       beats: 16,
@@ -30,11 +30,11 @@ class DrumRoll extends RootComponent {
 
   handlerDeleteButtonClick = (e: React.MouseEvent) => {
     const target = parseInt((e.target as HTMLButtonElement).value)
-    this.setState({ rows: this.state.rows.filter((row) => { return row.id !== target })})
+    this.props.backprop({ rows: this.props.rows.filter((row) => { return row.id !== target })})
   }
 
   render() {
-    const rows = this.state.rows.map((row, ind) => {
+    const rows = this.props.rows.map((row, ind) => {
       return (
         <div>
           <button value={row.id} onClick={this.handlerDeleteButtonClick}>Delete</button>

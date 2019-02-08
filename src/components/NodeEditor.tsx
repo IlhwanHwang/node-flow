@@ -1,7 +1,16 @@
 import React from 'react';
-import DrumRoll from "./DrumRoll"
+import DrumRoll, {DrumRollState} from "./DrumRoll"
+import {ChildComponent} from "./ExtendedComponent"
 
-class NodeEditor extends React.Component {
+export interface NodeEditorState {
+  target: DrumRollState
+}
+
+interface Props extends NodeEditorState {
+  backprop: (d: any) => void
+}
+
+class NodeEditor extends ChildComponent<Props> {
   render() {
     return (
       <div style={{
@@ -11,7 +20,7 @@ class NodeEditor extends React.Component {
         height: "100%",
         overflow: "scroll"
       }}>
-        <DrumRoll></DrumRoll>
+        <DrumRoll {...this.props.target} backprop={this.makeBackprop("target")}></DrumRoll>
       </div>
     );
   }

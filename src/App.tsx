@@ -1,8 +1,13 @@
 import React from "react";
-import NodeEditor from "./components/NodeEditor"
+import NodeEditor, {NodeEditorState} from "./components/NodeEditor"
 import NodePanel from "./components/NodePanel"
+import {RootComponent} from "./components/ExtendedComponent"
 
-class App extends React.Component {
+interface BaseState {
+  nodeEditor: NodeEditorState
+}
+
+class App extends RootComponent<{}, BaseState> {
   render() {
     return (
       <div style={{ overflow: "hidden" }}>
@@ -10,7 +15,7 @@ class App extends React.Component {
           <NodePanel/>
         </div>
         <div style={{ width: "100vw", height: "50vh" }}>
-          <NodeEditor/>
+          <NodeEditor {...this.state.nodeEditor} backprop={this.makeBackprop("nodeEditor")}/>
         </div>
       </div>
     );
