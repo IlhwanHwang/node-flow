@@ -1,42 +1,32 @@
 import React, { ChangeEventHandler } from "react";
 import Draggable from 'react-draggable';
+import {ChildComponent} from "./ExtendedComponent"
 
-interface Props {
+export interface NodeState {
   id: number;
-  initx: number;
-}
-
-interface State {
   name: string;
-  editing: boolean;
 }
 
+interface Props extends NodeState {
+  backprop: (d: any) => void
+}
 
-class Node extends React.Component<Props, State> {
-  static defaultProps = {
-    id: -1
+class Node extends ChildComponent<Props> {
+  state = {
+    nameEditing: false
   }
-
-  state: State = {
-    name: "hi",
-    editing: false
-  }
-
-  // constructor() {
-  //   super(Node.defaultProps, {})
-  // }
 
   onChangeHandler = (e: React.ChangeEvent): void => {
     const { name, value } = (e.target as HTMLInputElement);
     if (name === "name") {
-      this.setState({
+      this.props.backprop({
         [name]: value
       });
     }
   }
 
   onClickHandler = (): void => {
-    this.setState({editing: !this.state.editing})
+    this.setState({nameEditing: !this.state.nameEditing})
   }
 
   render() {
@@ -45,7 +35,8 @@ class Node extends React.Component<Props, State> {
         <div 
           id={"node-" + this.props.id.toString()}
           style={{
-            left: this.props.initx,
+            left: 100,
+            top: 100,
             position: "absolute",
             width: "100px",
             height: "80px",
@@ -62,16 +53,16 @@ class Node extends React.Component<Props, State> {
           >
           </div>
           {
-            this.state.editing
+            this.state.nameEditing
               ? (<input 
                   onChange={this.onChangeHandler} 
-                  value={this.state.name}
+                  value={this.props.name}
                   name="name"
                   style={{
                     width: "90%"
                   }}
                 ></input>)
-              : (<div>{this.state.name}</div>)
+              : (<div>{this.props.name}</div>)
             }
           <button onClick={this.onClickHandler}>
             Edit
